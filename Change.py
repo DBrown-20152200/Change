@@ -1,19 +1,26 @@
 def find_fewest_coins(coins, target):
     if target < 0:
         raise ValueError("target can't be negative")
-    initial_target = target
-    coins.sort(reverse = True)    
-    change = [] 
+         
+    coins_limit = target + 1
+    dp = [coins_limit] * (target + 1)
+    dp[0] = 0
 
-    while target > 0:
-        for denominations in range(len(coins)):
-            if target >= coins[denominations]:
-                target -= coins[denominations]
-                change.append(coins[denominations])
-            else:
-                denominations += 1
-        if target != 0:
-            raise ValueError("can't make target with given coins")
+    for amount, number_of_coins in enumerate(dp):
+        if number_of_coins == coins_limit:
+            continue
+        for coin in coins:
+            total = amount + coin
+            if total <= target:
+                dp[total] = min(dp[total], number_of_coins + 1)
+
+    if dp[target] > target:
+        raise ValueError("can't make target with given coins")
     
-    change.sort()
+    change = []
+    for coin in coins:
+        while coin <= target and dp[target] == dp[target - coin] + 1:
+            change.append(coin)
+            target -= coin
+
     return change
