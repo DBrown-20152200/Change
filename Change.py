@@ -1,13 +1,14 @@
 def find_fewest_coins(coins, target):
+    if target < 0:
+        raise ValueError("target can't be negative")
     initial_target = target
     coins.sort(reverse = True)    
     change = [] 
-    total = 0   
+
     while target > 0:
         for denominations in range(len(coins)):
             if target >= coins[denominations]:
                 target -= coins[denominations]
-                total += coins[denominations]
                 change.append(coins[denominations])
             else:
                 denominations += 1
